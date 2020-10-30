@@ -31,7 +31,6 @@ public class DateUtils {
 	 * Retorna la hora del sistema en formato string Calendar.getTime
 	 */
 	public String getCurrentHour(Calendar calendar) {
-		calendar.add(calendar.HOUR_OF_DAY, 12);
 		SimpleDateFormat stringToDateFormatter = new SimpleDateFormat(HOUR_FORMAT);
 		String time = stringToDateFormatter.format(calendar.getTime());
 		return time;
