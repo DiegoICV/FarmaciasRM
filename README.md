@@ -14,4 +14,6 @@ SingleRest backend con el proposito de actuar como middleware para el manejo de 
 - ApiURL: https://farmanet.minsal.cl/maps/index.php/ws/getLocalesRegion?
 - Parametros: id_region=7
 
+### Deploy
+ El servicio fue deployado 
 

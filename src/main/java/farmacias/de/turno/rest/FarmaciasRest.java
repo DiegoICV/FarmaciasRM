@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 public class FarmaciasRest {
-
+	
     @Autowired
     FarmaciaServiceDto farmaciaService;
     /*
@@ -29,7 +29,13 @@ public class FarmaciasRest {
      */
    @GetMapping(value = "/traer-farmacias-de-turno",produces = MediaType.APPLICATION_JSON_VALUE )
     public List<FarmaciasDto> getFarmaciasDeTurnoAbiertasPorNombreComuna(@RequestParam String comuna, HttpServletRequest request) throws IOException {
-        return farmaciaService.getFarmaciasDeTurno(comuna,Calendar.getInstance(request.getLocale()));
+	   return farmaciaService.getFarmaciasDeTurno(comuna,Calendar.getInstance(request.getLocale()));
     }
+   
+   @GetMapping(value = "/traer-farmacias-de-turno-por-comuna-id/{idComuna}",produces = MediaType.APPLICATION_JSON_VALUE )
+   public List<FarmaciasDto> getFarmaciasDeTurnoAbiertasPorIdComuna(@PathVariable String idComuna, HttpServletRequest request) throws IOException {
+	   return farmaciaService.getFarmaciasDeTurnoIdComuna(idComuna,Calendar.getInstance(request.getLocale()));
+   }
+   
 
 }

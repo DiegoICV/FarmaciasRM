@@ -8,10 +8,18 @@ public class FarmaciasDto {
         private String telefono;
         private String localLat;
         private String localLng;
+        private String comunaNombre;
 
     public FarmaciasDto() {
     }
 
+    public String getComunaNombre() {
+    	return comunaNombre;
+    }
+    
+    public void setComunaNombre(String comunaNombre) {
+    	this.comunaNombre = comunaNombre;
+    }
     public String getNombreLocal() {
         return nombreLocal;
     }

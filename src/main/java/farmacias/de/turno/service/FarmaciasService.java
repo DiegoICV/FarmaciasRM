@@ -34,6 +34,13 @@ public class FarmaciasService implements FarmaciaServiceDto {
         if(!farmaciasDeTurnoList.isEmpty()) return farmaciasDeTurnoList; else throw new NotFoundException(" No existen farmacias de turno para esta Comuna");
     }
 
+    @Override
+    public List<FarmaciasDto> getFarmaciasDeTurnoIdComuna(String idComuna, Calendar calendar) throws IOException{
+        String horaActual = dateUtils.getCurrentHour(calendar);
+        List<FarmaciasDto> farmaciasDeTurnoList = farmaciasRepository.farmaciasDeTurnoRMPorIdComuna(idComuna,horaActual);
+        if(!farmaciasDeTurnoList.isEmpty()) return farmaciasDeTurnoList; else throw new NotFoundException(" No existen farmacias de turno para esta Comuna");
+    	
+    }
    
 
 }

@@ -12,4 +12,6 @@ public interface FarmaciaServiceDto {
     List<FarmaciasDto> getFarmaciasPorIdRegion(String idRegion);
 
     List<FarmaciasDto> getFarmaciasDeTurno(String comuna, Calendar calendar) throws IOException;
+
+	List<FarmaciasDto> getFarmaciasDeTurnoIdComuna(String idComuna, Calendar calendar) throws IOException;
 }

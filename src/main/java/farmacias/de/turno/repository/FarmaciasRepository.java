@@ -8,6 +8,8 @@ import farmacias.de.turno.mapper.JsonToDtoMaping;
 import farmacias.de.turno.utils.DateUtils;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.*;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @Repository
 public class FarmaciasRepository {
 
+	 private static final Logger log = LoggerFactory.getLogger(FarmaciasRepository.class);
     @Autowired
     FarmaciasDeTurnoRestApiConfig configProperties;
 
@@ -42,8 +45,6 @@ public class FarmaciasRepository {
     DateUtils dateUtils;
 
     List<JsonToDtoMaping> jsonToDtoMapings = new ArrayList<>();
-
-
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
@@ -93,15 +94,21 @@ public class FarmaciasRepository {
      * Se filtran las farmacias abiertas segun una comuna y hora buscando en los nodos del arbol Json mapeado
      */
     public List<FarmaciasDto> farmaciasDeTurnoRM(String comuna,String horaActual) throws IOException {
-        return jsonToDtoMapings.stream()
-                    .filter(nodo->nodo.getFkRegion().equalsIgnoreCase(String.valueOf(7))
-                    && nodo.getComunaNombre().toUpperCase().equalsIgnoreCase(comuna.toUpperCase())
-                    && dateUtils.isHourInInterval(horaActual,nodo.getFuncionamientoHoraApertura(),nodo.getFuncionamientoHoraCierre()))
-                    .map(result->modelMapper.map(result,FarmaciasDto.class)).collect(Collectors.toList());
-
-
+    	
+    	return jsonToDtoMapings.stream()
+                .filter(nodo->nodo.getFkRegion().equalsIgnoreCase("7")
+                && nodo.getComunaNombre().toUpperCase().equalsIgnoreCase(comuna.toUpperCase())
+                && dateUtils.isHourInInterval(horaActual,nodo.getFuncionamientoHoraApertura(),nodo.getFuncionamientoHoraCierre()))
+                .map(result->modelMapper.map(result,FarmaciasDto.class)).collect(Collectors.toList());
     }
 
+    public List<FarmaciasDto> farmaciasDeTurnoRMPorIdComuna(String idComuna, String horaActual) {
+		return jsonToDtoMapings.stream()
+                .filter(nodo->nodo.getFkRegion().equalsIgnoreCase("7")
+                && nodo.getFkComuna().equalsIgnoreCase(idComuna)
+                && dateUtils.isHourInInterval(horaActual,nodo.getFuncionamientoHoraApertura(),nodo.getFuncionamientoHoraCierre()))
+                .map(result->modelMapper.map(result,FarmaciasDto.class)).collect(Collectors.toList());
+	}
     public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
     {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
@@ -114,4 +121,7 @@ public class FarmaciasRepository {
     public void setMappersFarmacias(List<JsonToDtoMaping> jsonToDtoMapings) {
         this.jsonToDtoMapings = jsonToDtoMapings;
     }
+
+
+	
 }

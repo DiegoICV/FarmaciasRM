@@ -36,6 +36,9 @@ public class JsonToDtoMaping {
 
     @JsonProperty("local_direccion")
     private String localDireccion;
+    
+    @JsonProperty("fk_comuna")
+    private String fkComuna;
 
 
     public JsonToDtoMaping() {
@@ -113,6 +116,14 @@ public class JsonToDtoMaping {
         this.fkRegion = fkRegion.trim();
     }
 
+    public String getFkComuna() {
+        return fkComuna;
+    }
+
+    public void setFkComuna(String fkComuna) {
+        this.fkComuna = fkComuna.trim();
+    }
+    
     public String getLocalDireccion() {
         return localDireccion;
     }

@@ -31,6 +31,7 @@ public class DateUtils {
 	 * Retorna la hora del sistema en formato string Calendar.getTime
 	 */
 	public String getCurrentHour(Calendar calendar) {
+		calendar.add(calendar.HOUR_OF_DAY, 12);
 		SimpleDateFormat stringToDateFormatter = new SimpleDateFormat(HOUR_FORMAT);
 		String time = stringToDateFormatter.format(calendar.getTime());
 		return time;
@@ -46,6 +47,11 @@ public class DateUtils {
 			return target.compareTo(start) >= 0;
 		}
 
+	}
+	
+	public boolean isHourAfterStart(String target, String start) {
+		return target.compareTo(start)<=0;
+		
 	}
 
 	/**
