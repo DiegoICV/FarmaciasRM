@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * Esta clase se encarga de preparar el consumo del servicio de las farmacias
  */
-@ConfigurationProperties(prefix = "request.pharmacy")
+@ConfigurationProperties(prefix = "request")
 @Component
 public class FarmaciasDeTurnoRestApiConfig extends BasicRequestApiClass {
 

@@ -2,11 +2,13 @@ package farmacias.de.turno.config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import farmacias.de.turno.config.DateUtils;
+import farmacias.de.turno.utils.DateUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+/**
+ *Test DateUtils
+ */
 public class DateUtilsTest {
 
     private DateUtils dateUtils;

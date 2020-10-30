@@ -3,14 +3,13 @@ package farmacias.de.turno.dto;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
-
+/*
+ * Prototipo para el Servicio que realiza las operaciones
+ * manipulando el response de la web api
+ */
 public interface FarmaciaServiceDto {
 
     List<FarmaciasDto> getFarmaciasPorIdRegion(String idRegion);
 
-    List<FarmaciasDto> getFarmaciasDeTurno(String comuna, String comunaLocal, Calendar calendar) throws IOException;
-
-    List<String> getLocalesPorNombreComunaIdregion(String comuna,String idRegion) throws IOException;
-
-    List<String> getAllLocales() throws IOException;
+    List<FarmaciasDto> getFarmaciasDeTurno(String comuna, Calendar calendar) throws IOException;
 }

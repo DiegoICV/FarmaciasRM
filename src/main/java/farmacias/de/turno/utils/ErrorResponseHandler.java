@@ -1,7 +1,7 @@
-package farmacias.de.turno.config;
+package farmacias.de.turno.utils;
 
 /**
- * Formato de respuesta ante cualquier excepcion
+ * Prototipo para manipular respuestas de Error
  */
 public class ErrorResponseHandler {
     /**

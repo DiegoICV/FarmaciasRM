@@ -1,7 +1,7 @@
 package farmacias.de.turno.config;
 
 /**
- * Base para configurar consumo de api rest
+ * Define los metodos basicos para ejecutar los Request a la Api de farmanet
  */
 public class BasicRequestApiClass {
     private String api;

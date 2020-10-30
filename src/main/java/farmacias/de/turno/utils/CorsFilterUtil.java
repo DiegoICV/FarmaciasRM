@@ -1,4 +1,4 @@
-package farmacias.de.turno.config;
+package farmacias.de.turno.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -10,9 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Como la api de origen (farmanet.minsal.cl) presenta bloqueo de CORS,
+ *  las peticiones deben realizarse mediante un filtro que establece las cabeceras
+ *  genericas para el Http response
+ */
 @Component
-public class CorsFilter implements Filter {
+public class CorsFilterUtil implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)

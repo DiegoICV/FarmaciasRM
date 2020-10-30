@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import farmacias.de.turno.exception.BadRequestException;
 import farmacias.de.turno.exception.ConflictException;
 import farmacias.de.turno.exception.NotFoundException;
+import farmacias.de.turno.utils.ErrorResponseHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

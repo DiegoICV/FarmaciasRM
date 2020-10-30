@@ -1,5 +1,7 @@
 package farmacias.de.turno.dto;
-
+/*
+ * data transfer object utilizado para darle un formato al Json que se recibe como response
+ */
 public class FarmaciasDto {
         private String nombreLocal;
         private String direccion;

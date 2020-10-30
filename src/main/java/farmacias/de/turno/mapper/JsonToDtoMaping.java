@@ -1,9 +1,11 @@
 package farmacias.de.turno.mapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+/*
+ * Formato que se le dará al Json entregado por farmanet.minsal.cl para ser procesado en un data type : FarmaciasDto
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FarmacyObjectMapper {
+public class JsonToDtoMaping {
 
     @JsonProperty("local_nombre")
    private String localNombre;
@@ -36,7 +38,7 @@ public class FarmacyObjectMapper {
     private String localDireccion;
 
 
-    public FarmacyObjectMapper() {
+    public JsonToDtoMaping() {
     }
 
     public String getLocalNombre() {

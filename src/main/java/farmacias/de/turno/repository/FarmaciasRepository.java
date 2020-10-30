@@ -3,9 +3,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import farmacias.de.turno.config.FarmaciasDeTurnoRestApiConfig;
-import farmacias.de.turno.config.DateUtils;
 import farmacias.de.turno.dto.FarmaciasDto;
-import farmacias.de.turno.mapper.FarmacyObjectMapper;
+import farmacias.de.turno.mapper.JsonToDtoMaping;
+import farmacias.de.turno.utils.DateUtils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
-public class FarmaciasRepository implements IMapperByService {
+public class FarmaciasRepository {
 
     @Autowired
     FarmaciasDeTurnoRestApiConfig configProperties;
@@ -41,7 +41,7 @@ public class FarmaciasRepository implements IMapperByService {
     @Autowired
     DateUtils dateUtils;
 
-    List<FarmacyObjectMapper> farmacyObjectMappers = new ArrayList<>();
+    List<JsonToDtoMaping> jsonToDtoMapings = new ArrayList<>();
 
 
     @Bean
@@ -50,11 +50,10 @@ public class FarmaciasRepository implements IMapperByService {
     }
 
 
-    /**
-     * Por medio de un been cargamos todas las farmacias en una lista
-     * @throws IOException
+    /*
+     * Bean utilizado para mappear el objeto Json obtenido en el response.
      */
-    @Bean(name = "mapperServicePharmacy")
+    @Bean(name = "mapperService")
     public void mapperByService() throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", configProperties.getContentType());
@@ -71,82 +70,48 @@ public class FarmaciasRepository implements IMapperByService {
             JsonNode root = mapper.readTree(response.getBody());
             for (Iterator<JsonNode> it = root.iterator(); it.hasNext(); ) {
                 JsonNode jsonNode = it.next();
-                FarmacyObjectMapper farmacyObjectMapper = mapper.treeToValue(jsonNode, FarmacyObjectMapper.class);
-                farmacyObjectMappers.add(farmacyObjectMapper);
+                JsonToDtoMaping jsonToDtoMaping = mapper.treeToValue(jsonNode, JsonToDtoMaping.class);
+                jsonToDtoMapings.add(jsonToDtoMaping);
             }
         }
 
     }
 
     /**
-     * Se buscan farmacias por region
-     * @param idRegion
-     * @return
+     * Realiza una busqueda dentro del json ya Mapeado. buscando por cada nodo si se encuentra la IdRegion buscada. 
+     * @return retorna una lista de farmacias asociadas a esa ID region
      */
-    public List<FarmaciasDto> findPharmacyByIdRegion(String idRegion){
-               return  farmacyObjectMappers
+    public List<FarmaciasDto> buscarFarmaciasPorIdRegion(String idRegion){
+               return  jsonToDtoMapings
                 .stream()
-                .filter(a->a.getFkRegion().equalsIgnoreCase(idRegion))
+                .filter(nodo->nodo.getFkRegion().equalsIgnoreCase(idRegion))
                 .map(a -> modelMapper.map(a, FarmaciasDto.class))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Se buscan las farmacias tomando en cuenta la comuna , el nombre del local y la hora
-     * @param comuna
-     * @param localNombre
-     * @param horaActual
-     * @return
-     * @throws IOException
+     * Se filtran las farmacias abiertas segun una comuna y hora buscando en los nodos del arbol Json mapeado
      */
-    public List<FarmaciasDto> farmaciasDeTurno(String comuna,String localNombre,String horaActual) throws IOException {
-        // ComunaDto comunaDto = comunaServiceImpl.findComunaByName(comuna.toUpperCase());
-        //Funcion que busca la Id region de la comuna por el nombre
-        return farmacyObjectMappers.stream()
-                    .filter(a->a.getFkRegion().equalsIgnoreCase(String.valueOf(7))
-                    && a.getLocalNombre().toUpperCase().equalsIgnoreCase(localNombre.toUpperCase())
-                    && a.getComunaNombre().toUpperCase().equalsIgnoreCase(comuna.toUpperCase())
-                    && dateUtils.isHourInInterval(horaActual,a.getFuncionamientoHoraApertura(),a.getFuncionamientoHoraCierre()))
-                    .map(a->modelMapper.map(a,FarmaciasDto.class)).collect(Collectors.toList());
+    public List<FarmaciasDto> farmaciasDeTurnoRM(String comuna,String horaActual) throws IOException {
+        return jsonToDtoMapings.stream()
+                    .filter(nodo->nodo.getFkRegion().equalsIgnoreCase(String.valueOf(7))
+                    && nodo.getComunaNombre().toUpperCase().equalsIgnoreCase(comuna.toUpperCase())
+                    && dateUtils.isHourInInterval(horaActual,nodo.getFuncionamientoHoraApertura(),nodo.getFuncionamientoHoraCierre()))
+                    .map(result->modelMapper.map(result,FarmaciasDto.class)).collect(Collectors.toList());
 
 
     }
-
-
-    /**
-     * Se buscan los locales por medio de una comuna
-     * @param comunaDto
-     * @return
-     * @throws IOException
-     */
-    public List<String> localByComuna(String comuna,String idRegion) throws IOException {
-
-        return farmacyObjectMappers.stream()
-                .filter(a->a.getFkRegion().equalsIgnoreCase(String.valueOf(idRegion))
-                        && a.getComunaNombre().toUpperCase().equalsIgnoreCase(comuna)).filter(distinctByKey(a->a.getLocalNombre()))
-                .map(a->a.getLocalNombre()).collect(Collectors.toList());
-    }
-
-
-    public List<String> locales() throws IOException {
-        return farmacyObjectMappers.stream()
-                .filter(distinctByKey(a->a.getLocalNombre()))
-                .map(a->a.getLocalNombre()).collect(Collectors.toList());
-    }
-
-
-
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
     {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
-    public List<FarmacyObjectMapper> getPharmacyMappers() {
-        return farmacyObjectMappers;
+    public List<JsonToDtoMaping> getMappersFarmacias() {
+        return jsonToDtoMapings;
     }
 
-    public void setPharmacyMappers(List<FarmacyObjectMapper> farmacyObjectMappers) {
-        this.farmacyObjectMappers = farmacyObjectMappers;
+    public void setMappersFarmacias(List<JsonToDtoMaping> jsonToDtoMapings) {
+        this.jsonToDtoMapings = jsonToDtoMapings;
     }
 }
